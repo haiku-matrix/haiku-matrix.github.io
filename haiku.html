@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Poem Player</title>
+  <link rel="stylesheet" type="text/css" href="haiku.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cutive+Mono">
+</head>
+<body>
+  
+  <div class="editor">
+    <div>
+      <input type="text" id="season1Text" class="season" readonly>
+      <input type="text" id="season2Text" class="season" readonly>
+      <input type="text" id="season3Text" class="season" readonly>
+    </div>
+    <div>
+      <input type="text" id="verse1Master" class="master" readonly>
+      <textarea id="verse1Text" readonly></textarea>
+    </div>
+    <div>
+      <input type="text" id="verse2Master" class="master" readonly>
+      <textarea id="verse2Text" readonly></textarea>
+    </div>
+    <div>
+      <input type="text" id="verse3Master" class="master" readonly>
+      <textarea id="verse3Text" readonly></textarea>
+    </div>
+  </div>
+  <div id="log"></div>
+
+  <script>
+    let season = "summer";
+    let master = "Basho";
+    let seasonKanji;
+    let log = [];
+
+    const selectedLinesSet1 = [null, null, null];
+    const selectedLinesSet2 = [null, null, null];
+    const selectedLinesSet3 = [null, null, null];
+
+    const verseLinesSet1 = {
+      "Basho": {
+        "summer": ["The summer grasses", "The early summer rain", "Oh, tranquility!"],
+        "fall": ["When you say something", "I pull out the gray hairs", "In this autumn"],
+        "winter": ["The cold wintry wind", "Let’s go out", "The narcissus"],
+        "spring": ["Try to plant", "The old pond;", "The spring haze"],
+      },
+      "Buson": {
+        "summer": ["The canola flowers", "The afternoon shower", "The summer river."],
+        "fall": ["Since it turns out", "Autumn has come.", "The incense sticks"],
+        "winter": ["The winter wind", "The first snow falls ", "“Put me up for a night!”"],
+        "spring": ["The fading of spring", "Mist in the grass", "Spring rain"],
+      },
+
+      "Issa": {
+        "summer": ["The cool breeze", "The summer mountains", "Don’t hit it."],
+        "fall": ["The baby cow", "In September", "Not knowing that"],
+        "winter": ["It looks appetizing.", "“You are a gray starling”", "Well, this is"],
+        "spring": ["The spring breeze", "Becoming a child", "In hazy night"],
+      },
+
+      "Shiki": {
+        "summer": ["Full sail, reefed sail", "Hydrangeas ---", "Leaving me"],
+        "fall": ["Hometown -", "Having felled", "I am going"],
+        "winter": ["Just outside the gate", "It is cold, but", "Evening snow falling"],
+        "spring": ["A cock crows", "Fanning out its tail", "Entangled with"],
+      },
+    };
+
+    const verseLinesSet2 = {
+      "Basho": {
+        "summer": ["All that remains", "Fall and fall yet", "Penetrating the very rock"],
+        "fall": ["The lip feel cold", "And under my pillow", "Why I get older?"],
+        "winter": ["The throbbing pains of the swelling cheek", "To see the snow view", "With the white a shoji screen"],
+        "spring": ["As for a child", "A frog jumps in,—", "The scent already in the air"],
+      },
+      "Buson": {
+        "summer": ["The moon in the east", "Catch the grass or leaf", "It’s happy to walk across it"],
+        "fall": ["I’m all by myself", "The plain hot water is fragrant.", "The reddish soil color pampas grasses"],
+        "winter": ["Flings pebbles", "Then it melts", "He threw the katana"],
+        "spring": ["The feeling of holding", "The water silent", "The day ending"],
+      },
+
+      "Issa": {
+        "summer": ["With all his strength", "At my every steps,", "The fly rub the hands"],
+        "fall": ["Goes on a trip", "The sky wears", "Autumn’s begun, a child"],
+        "winter": ["The snow softly", "I called by people.", "My final abode"],
+        "spring": ["Being pulled by a cow", "On New Year’s Day...", "Stepping into water..."],
+      },
+
+      "Shiki": {
+        "summer": ["How far do you go?", "Rain splashing upon", "Something on my chest"],
+        "fall": ["Festivals are over", "A pasania tree,-", "you're staying"],
+        "winter": ["The road slopes downward", "We have sake", "A pair of mandarin ducks"],
+        "spring": ["Peach blossoms", "See-a peacock!", "The wings of birds!"],
+      },
+    };
+
+    const verseLinesSet3 = {
+      "Basho": {
+        "summer": ["Of warriors’ dreams.", "Leave untouched Hikari-do Hall.", "A cicada’s voice."],
+        "fall": ["The Autumn wind.", "There is a cricket.", "The clouds and birds."],
+        "winter": ["People’s face.", "Where we slip and fall.", "Shines together."],
+        "spring": ["A little wild cherry tree.", "The sound of the water.", "The moon and ume."],
+      },
+      "Buson": {
+        "summer": ["The sun in the west.", "The village spallow.", "My hands with zori sandal."],
+        "fall": ["I make friends with the harvest moon", "The Seyaku-in.", "A few of peices."],
+        "winter": ["At the temple bell", "Into dew on the grass", "It is a snow storm."],
+        "spring": ["Of the biwa.", "Just before sunset", "I linger with it"],
+      },
+
+      "Issa": {
+        "summer": ["The cricket.", "I could sea more.", "Or rub the legs."],
+        "fall": ["The autumn rain.", "A lined kimono.", "Buddha!"],
+        "winter": ["And gently.", "It is cold.", "The snow lay 15 meter."],
+        "spring": ["To the Zenkoji temple.", "I wish!", "Losing my way"],
+      },
+
+      "Shiki": {
+        "summer": ["Fresh summer gale", "The crumbling walls", "Tears on my mosquito net"],
+        "fall": ["Flavorful persimmons", "The sky of autumn.", "Two autumns for us"],
+        "winter": ["Winter trees", "And the hot spring", "On an ancient lake."],
+        "spring": ["Peach blossoms", "See-a peacock!", "The wings of birds!"],
+      },
+    };
+
+    function updateTextField(verseIndex, selectedLines, verseLines) {
+            const seasonElementId = `season${verseIndex + 1}Text`;
+            const elementId = `verse${verseIndex + 1}Text`;
+            const masterElementId = `verse${verseIndex + 1}Master`;
+            const seasonLine = season !== null ? season : "";
+            if (seasonLine == "summer") {
+                seasonKanji = "夏";
+            } else if (seasonLine == "winter") {
+                seasonKanji = "冬";
+            } else if (seasonLine == "fall") {
+                seasonKanji = "秋";
+            } else if (seasonLine == "spring") {
+                seasonKanji = "春";
+            }
+            const lineIndex = selectedLines[verseIndex];
+            const line = lineIndex !== null ? verseLines[master][season][lineIndex] : "";
+            document.getElementById(seasonElementId).value = seasonKanji;
+            document.getElementById(elementId).value = line;
+            document.getElementById(masterElementId).value = master;
+
+            // Update the log
+            log[verseIndex] = {
+                season: seasonKanji,
+                master: master,
+                line: line
+            };
+        }
+
+        function updateLog() {
+          const logDiv = document.getElementById("log");
+          const logEntryDiv = document.createElement("div");
+          // Add an hr with spacing above
+          const hr = document.createElement("hr");
+          hr.style.marginTop = "8px";
+          logEntryDiv.appendChild(hr);
+          // Add a timestamp with spacing above
+          const timestampDiv = document.createElement("div");
+          timestampDiv.textContent = new Date().toLocaleString();
+          timestampDiv.style.marginBottom = "8px";
+          logEntryDiv.appendChild(timestampDiv);
+
+          log.forEach((entry, index) => {
+            const logEntry = document.createElement("div");
+            logEntry.textContent = `${entry.season} ${entry.line}`;
+            logEntryDiv.appendChild(logEntry);
+          });
+
+          // Insert the new log entry div at the beginning of the logDiv
+          logDiv.insertBefore(logEntryDiv, logDiv.firstChild);
+        }
+        
+        document.addEventListener('keydown', (event) => {
+            let newSeason = season;
+            let newMaster = master;
+
+            switch (event.key) {
+                case 'w':
+                    newSeason = "summer";
+                    break;
+                case 'd':
+                    newSeason = "fall";
+                    break;
+                case 's':
+                    newSeason = "winter";
+                    break;
+                case 'a':
+                    newSeason = "spring";
+                    break;
+                case 'v':
+                    newMaster = "Basho";
+                    break;
+                case 'b':
+                    newMaster = "Buson";
+                    break;
+                case 'n':
+                    newMaster = "Issa";
+                    break;
+                case 'm':
+                    newMaster = "Shiki";
+                    break;
+            }
+
+            if (newSeason !== season || newMaster !== master) {
+                season = newSeason;
+                master = newMaster;
+                // Reset selected lines when master or season changes
+                selectedLinesSet1.fill(null);
+                selectedLinesSet2.fill(null);
+                selectedLinesSet3.fill(null);
+            }
+
+            console.log("Current season:", season);
+            console.log("Current master:", master);
+        });
+
+        document.addEventListener('keypress', (event) => {
+            const key = parseInt(event.key);
+            const verseIndex = Math.floor((key - 1) / 3);
+            const lineIndex = (key - 1) % 3;
+
+            if (!isNaN(key) && verseIndex >= 0 && verseIndex < 3 && lineIndex >= 0 && lineIndex < 3) {
+                // Update the text field based on the set of buttons pressed
+                if (key <= 3) {
+                    selectedLinesSet1[verseIndex] = lineIndex;
+                    updateTextField(verseIndex, selectedLinesSet1, verseLinesSet1);
+                } else if (key <= 6) {
+                    selectedLinesSet2[verseIndex] = lineIndex;
+                    updateTextField(verseIndex, selectedLinesSet2, verseLinesSet2);
+                } else if (key <= 9) {
+                    selectedLinesSet3[verseIndex] = lineIndex;
+                    updateTextField(verseIndex, selectedLinesSet3, verseLinesSet3);
+                }
+            } else if (event.key.toLowerCase() === 'l') {
+                updateLog();
+            } else {
+                console.log("No verse generated");
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,66 @@
+body {
+  background-color: #F7F6F1;
+  margin: 0;
+  padding: 0;
+}
+
+input[type="text"],
+textarea {
+  width: 100%;
+  height: fit-content;
+  resize: none;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  font-family: "Cutive Mono", serif;
+  font-size: 14pt;
+  background-color: #F7F6F1;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+#verse1Master,
+#verse2Master,
+#verse3Master {
+  font-size: 9pt;
+  opacity: 0.6;
+  padding: 0;
+}
+
+#season1Text,
+#season2Text,
+#season3Text {
+  width: 18pt;
+  display: inline-block;
+  margin: 16pt 0;
+  font-size: 16pt;
+  color: #007A78;
+}
+
+.editor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  padding: 0 16px; /* Adjusted padding */
+  background-color: #F7F6F1;
+  position: fixed;
+  top: 0; /* Fixed at the top */
+  width: 100%; /* Full width */
+  z-index: 1; /* Ensure it's above other elements */
+  border-bottom: #00000030;
+}
+
+#log {
+  font-family: "Cutive Mono", serif;
+  font-size: 9pt;
+  padding: 16px;
+  margin-top: 250px;
+}
+
+hr {
+  opacity: 0.3;
+  margin-top: 8px;
+}
