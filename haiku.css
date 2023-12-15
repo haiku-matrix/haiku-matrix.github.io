@@ -36,7 +36,8 @@ textarea {
   display: inline-block;
   margin: 16pt 0;
   font-size: 16pt;
-  color: #007A78;
+  color: #000000;
+  font-weight: bold;
 }
 
 .editor {
