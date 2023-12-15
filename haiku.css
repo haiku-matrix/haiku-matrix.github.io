@@ -1,5 +1,5 @@
 body {
-  background-color: #F7F6F1;
+  background-color: #EAE4DC;
   margin: 0;
   padding: 0;
 }
@@ -7,16 +7,18 @@ body {
 input[type="text"],
 textarea {
   width: 100%;
-  height: fit-content;
+  height: auto;
   resize: none;
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   border: none;
   outline: none;
-  font-family: "Cutive Mono", serif;
-  font-size: 14pt;
-  background-color: #F7F6F1;
+  font-family: 'IBM Plex Mono', monospace;
+  opacity: 80%;
+  font-size: 12pt;
+  font-weight:lighter;
+  background-color: #EAE4DC;
   overflow-wrap: break-word;
   word-wrap: break-word;
 }
@@ -34,19 +36,19 @@ textarea {
 #season3Text {
   width: 18pt;
   display: inline-block;
-  margin: 16pt 0;
+  margin: 0;
   font-size: 16pt;
-  color: #000000;
   font-weight: bold;
+  color: #000000;
+  text-align: left;
 }
 
 .editor {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin: 0;
-  padding: 0 16px; /* Adjusted padding */
-  background-color: #F7F6F1;
+  align-items: left;
+  margin: 16px;
+  background-color: #EAE4DC;
   position: fixed;
   top: 0; /* Fixed at the top */
   width: 100%; /* Full width */
@@ -55,13 +57,19 @@ textarea {
 }
 
 #log {
-  font-family: "Cutive Mono", serif;
+  font-family: 'IBM Plex Mono', monospace;
   font-size: 9pt;
-  padding: 16px;
-  margin-top: 250px;
+  padding: 0 16px;
+  margin-top: 230px;
+  opacity: 60%;
 }
 
 hr {
   opacity: 0.3;
   margin-top: 8px;
+  border-top: 1px dashed black;
+}
+
+.editorhr{
+  margin: 0;
 }
