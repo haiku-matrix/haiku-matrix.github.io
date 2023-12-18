@@ -7,7 +7,7 @@ body {
 input[type="text"],
 textarea {
   width: 100%;
-  height: auto;
+  height: 12pt;
   resize: none;
   box-sizing: border-box;
   margin: 0;
@@ -16,7 +16,7 @@ textarea {
   outline: none;
   font-family: 'IBM Plex Mono', monospace;
   opacity: 80%;
-  font-size: 12pt;
+  font-size: 10pt;
   font-weight:lighter;
   background-color: #EAE4DC;
   overflow-wrap: break-word;
@@ -60,7 +60,7 @@ textarea {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 9pt;
   padding: 0 16px;
-  margin-top: 230px;
+  margin-top: 260px;
   opacity: 60%;
 }
 
